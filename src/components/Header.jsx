@@ -1,20 +1,41 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
-
+import auth from '../firebase'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
 const Header = () => {
+    const [currentUser, setCurrentUser] = useState(null)
+
+    const SignOut = async (e) => {
+        signOut(auth).then(()=>{
+        
+    }).catch(error => console.log(error))
+    }
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setCurrentUser(user);
+        });
+        return () => {
+          unsubscribe();
+        };
+      }, []);   
   return (
     <>
         <div className='header-container'>
             <div className='nav-bar'>
-                <Link to="/">
+                {auth.currentUser? <Link to="/">
                     Home
-                </Link>
-                <Link to='Login'> 
+                    </Link>:<div className='userAction'>
+                    <Link to='Login'> 
                     Login
                 </Link>
                 <Link to='Signup' >
                     SignUp
                 </Link>
+                        </div>}
+
+                
+
+                {auth.currentUser? <button onClick={()=> SignOut()}>Log Out</button>: null}
             </div>  
         </div>
     </>

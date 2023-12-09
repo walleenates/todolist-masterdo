@@ -6,10 +6,9 @@ const LoginPage = () => {
     const emailRef = useRef()
     const passwordRef = useRef()
 
-    const Signin = () => {
+    const Signin = (error) => {
         try{
-            
-            return signInWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value)
+            return signInWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value).catch((error)=console.log(error))
         } catch(error){
             console.log(error)
         }
